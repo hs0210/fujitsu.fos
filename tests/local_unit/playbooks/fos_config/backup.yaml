@@ -1,0 +1,17 @@
+---
+- hosts: host
+  gather_facts: no
+
+  tasks:
+  - name: configure interface settings
+    fos_config:
+      backup: yes
+      backup_options:
+        filename: backup.cfg
+        dir_path: /home/cicd/pswitch
+      # save_when: 'modified'
+      # lines:
+      #   - lldp transmit
+      #   - lldp receive
+      # parents: interface 0/14
+      

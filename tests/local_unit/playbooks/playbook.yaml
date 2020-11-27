@@ -1,0 +1,17 @@
+- hosts: host
+  gather_facts: no
+
+  tasks:
+  - name: configure interface settings
+    fos_config:
+      lines:
+        # - no shutdown
+        - lldp transmit
+        # - no lldp receive
+        # - no lldp notification
+      parents: interface 0/14
+      backup: yes
+      backup_options:
+        filename: test2.bak
+        dir_path: ~/ansible_collections/fujitsu/fos
+      

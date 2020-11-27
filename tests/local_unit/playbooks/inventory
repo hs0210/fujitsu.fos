@@ -1,0 +1,9 @@
+[host]
+192.168.3.111
+
+[host:vars]
+ansible_python_interpreter=/usr/bin/python3
+ansible_ssh_user=ansible
+ansible_ssh_pass=1234567890
+ansible_connection=network_cli
+ansible_network_os=fos

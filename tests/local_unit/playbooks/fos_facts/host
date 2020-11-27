@@ -1,0 +1,2 @@
+[host]
+feng ansible_host=192.168.3.111 ansible_ssh_user=ansible ansible_ssh_pass=1234567890

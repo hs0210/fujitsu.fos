@@ -9,9 +9,4 @@
       backup_options:
         filename: backup.cfg
         dir_path: /home/cicd/pswitch
-      # save_when: 'modified'
-      # lines:
-      #   - lldp transmit
-      #   - lldp receive
-      # parents: interface 0/14
       

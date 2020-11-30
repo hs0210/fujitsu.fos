@@ -1,3 +1,4 @@
+---
 - hosts: host
   gather_facts: no
 
@@ -7,11 +8,8 @@
       lines:
         # - no shutdown
         - lldp transmit
+        - lldp receive
         # - no lldp receive
-        # - no lldp notification
+        - no lldp notification
       parents: interface 0/14
-      backup: yes
-      backup_options:
-        filename: test2.bak
-        dir_path: ~/ansible_collections/fujitsu/fos
       

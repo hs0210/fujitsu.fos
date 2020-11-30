@@ -17,9 +17,13 @@ class Test(unittest.TestCase):
 
     def test_fos_config_backup(self):
         command = Cli + Inventory + PlaybookPath + 'backup.yaml -vvv'
-        retcode, output = subprocess.getstatusoutput(command)
+        retcode, output= subprocess.getstatusoutput(command)
         self.assertEqual(retcode, 0)
-        # print(output)
+        retcode, output = subprocess.getstatusoutput('ls /home/cicd/pswitch | grep backup.cfg')
+        self.assertEqual(retcode, 0)
+        self.assertEqual(output, 'backup.cfg')
+        retcode, output = subprocess.getstatusoutput('rm -fr /home/cicd/pswitch')
+        self.assertEqual(retcode, 0)
     
     # def test_fos_config_src(self):
     #     command = Cli + Inventory + PlaybookPath + 'src.yaml -vvv'

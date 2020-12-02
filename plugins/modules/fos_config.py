@@ -259,30 +259,26 @@ def main():
     connection = get_connection(module)
 
     if module.params['backup']:
-        filename = None
-        backup_path = None
+        filename = ''
+        backup_path = ''
         contents = get_config(module)
         config = FosNetworkConfig(indent=0, contents=contents)
         result['__backup__'] = contents
         if module.params['backup_options']:
             filename = module.params['backup_options']["filename"]
             backup_path = module.params['backup_options']["dir_path"]
-        if not backup_path:
-            backup_path = os.path.join(os.getcwd(), "backup")
         if not filename:
-            tstamp = time.strftime(
-                "%Y-%m-%d@%H:%M:%S", time.localtime(time.time())
-            )
-            filename = 'config.%s' %(tstamp)
-        if not os.path.exists(backup_path):
-            os.mkdir(backup_path)
-        fd = open(backup_path + '/' + filename, mode = 'w')
-        fd.write(contents)
-        fd.close()
-
-        # fd = open(module.params['backup_options']["dir_path"]+"/"+module.params['backup_options']["filename"], mode = 'w')
-        # fd.write(contents)
-        # fd.close()
+            tstamp = time.strftime("%Y-%m-%d@%H:%M:%S", time.localtime(time.time()))
+            filename = "config.%s" % (tstamp)
+        if not backup_path:
+            warnings.append('The backup path needs to be specified.')
+        else:
+            if not os.path.exists(backup_path):
+                warnings.append('The backup path needs to be created in advance.')
+            else:
+                fd = open(backup_path + '/' + filename, mode = 'w')
+                fd.write(contents)
+                fd.close()
 
     if any((module.params['lines'], module.params['src'])):
         match = module.params['match']

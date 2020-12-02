@@ -187,25 +187,3 @@ class TestFosConfigModule(TestFosModule):
         self.assertEqual(self.load_config.call_count, 0)
         args = self.run_commands.call_args[0][1]
         self.assertDictContainsSubset({'command': 'copy system:running-config nvram:startup-config'}, args[0])
-
-    def test_fos_config_match_none(self):
-        lines = ['hostname router']
-        set_module_args(dict(lines=lines, match='none'))
-        self.conn.get_diff = MagicMock(
-            return_value=self.cliconf_obj.get_diff(
-                '\n'.join(lines), self.running_config
-            )
-        )
-        self.execute_module(changed=True, commands=lines)
-
-    def test_fos_config_match_none(self):
-        lines = ['ip address 1.2.3.4/5', 'shutdown1']
-        # parents = ['interface Ethernet10']
-        set_module_args(dict(lines=lines, match='exact'))
-        self.conn.get_diff = MagicMock(
-            return_value=self.cliconf_obj.get_diff(
-                '\n'.join(lines), self.running_config
-            )
-        )
-        # commands = parents + lines
-        self.execute_module(changed=True, commands=lines, sort=False)

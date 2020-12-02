@@ -1,1 +1,10 @@
+authors:
+- Hu Shuai <hus.fnst@cn.fujitsu.com>
+dependencies:
+  ansible.netcommon: '>=1.0.0'
+description: Ansible Network Collection for Fujitsu PSWITCH
+license_file: LICENSE
+name: fos
+namespace: fujitsu
+readme: README.md
 version: 1.0.0

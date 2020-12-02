@@ -169,6 +169,7 @@ EXAMPLES = """
 
 import json
 import os
+import time
 
 from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import ConnectionError

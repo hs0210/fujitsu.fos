@@ -4,7 +4,7 @@ import re
 
 
 Cli = 'ansible-playbook -i '
-Inventory = 'tests/local_unit/playbooks/inventory '
+Inventory = '/home/cicd/inventory/inventory '
 PlaybookPath = 'tests/local_unit/playbooks/fos_config/'
 
 class Test(unittest.TestCase):

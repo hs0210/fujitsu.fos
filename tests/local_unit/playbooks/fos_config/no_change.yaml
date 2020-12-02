@@ -10,5 +10,5 @@
         - lldp transmit
         - lldp receive
         # - no lldp receive
-        - no lldp notification
+        # - no lldp notification
       parents: interface 0/14

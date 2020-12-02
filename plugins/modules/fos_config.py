@@ -198,8 +198,8 @@ def get_running_config(module, current_config=None, flags=None):
     if not running:
         if current_config:
             running = current_config
-    else:
-        running = get_config(module)
+        else:
+            running = get_config(module)
 
     return running
 

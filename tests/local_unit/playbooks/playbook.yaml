@@ -5,11 +5,13 @@
   tasks:
   - name: configure interface settings
     fos_config:
-      lines:
-        # - no shutdown
+      # before: 'clock set 12/02/2020'
+      # lines: clock timezone 8 minutes 0
+      parents: interface 0/13
+      lines: 
         - lldp transmit
         - lldp receive
-        # - no lldp receive
         - no lldp notification
-      parents: interface 0/14
+        - exit
+      match: exact
       

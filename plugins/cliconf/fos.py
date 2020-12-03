@@ -178,7 +178,7 @@ class Cliconf(CliconfBase):
         # prepare candidate configuration
         candidate_obj = NetworkConfig(indent=0)
         candidate_obj.load(candidate)
-        
+
         if running and diff_match != "none" and diff_replace != "config":
             # running configuration
             running_obj = NetworkConfig(

@@ -19,6 +19,8 @@ class Test(unittest.TestCase):
     #     print(output)
 
     def test_fos_config_backup(self):
+        retcode, output = subprocess.getstatusoutput('mkdir -p /home/cicd/pswitch')
+        self.assertEqual(retcode, 0)
         command = Cli + Inventory + PlaybookPath + 'backup.yaml -vvv'
         retcode, output= subprocess.getstatusoutput(command)
         self.assertEqual(retcode, 0)

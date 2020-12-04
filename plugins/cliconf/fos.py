@@ -191,9 +191,12 @@ class Cliconf(CliconfBase):
         else:
             configdiffobjs = candidate_obj.items
 
-        diff["config_diff"] = (
-            dumps(configdiffobjs, "commands") if configdiffobjs else ""
-        )
+        # diff["config_diff"] = (
+        #     dumps(configdiffobjs, "commands") if configdiffobjs else ""
+        # )
+
+        if configdiffobjs:
+            diff["config_diff"] = (candidate)
 
         return diff
 

@@ -161,7 +161,7 @@ class Cliconf(CliconfBase):
             'supports_replace': False
         }
 
-    def get_diff(self, candidate=None, running=None, diff_match='line', diff_ignore_lines=None, path=None, diff_replace='line'):
+    def get_diff(self, candidate=None, running=None, diff_match='line', path=None, diff_replace='line'):
         diff = {}
         device_operations = self.get_device_operations()
         option_values = self.get_option_values()
@@ -176,14 +176,16 @@ class Cliconf(CliconfBase):
             raise ValueError("'replace' value %s in invalid, valid values are %s" % (diff_replace, ', '.join(option_values['diff_replace'])))
 
         # prepare candidate configuration
-        candidate_obj = NetworkConfig(indent=0)
-        candidate_obj.load(candidate)
+        candidate_obj = NetworkConfig(indent=3, contents=candidate)
 
         if running and diff_match != "none" and diff_replace != "config":
             # running configuration
-            running_obj = NetworkConfig(
-                indent=0, contents=running, ignore_lines=diff_ignore_lines
-            )
+            running_obj = NetworkConfig(indent=3, contents=running)
+
+            # running_obj = NetworkConfig(indent=3, ignore_lines=diff_ignore_lines)
+            # running_obj.load(running)
+            # # running_obj.add(['lldp receive','lldp transmit', 'lldp notification', 'exit'], parents = ['interface 0/13'])
+
             configdiffobjs = candidate_obj.difference(
                 running_obj, path=path, match=diff_match, replace=diff_replace
             )
@@ -191,12 +193,9 @@ class Cliconf(CliconfBase):
         else:
             configdiffobjs = candidate_obj.items
 
-        # diff["config_diff"] = (
-        #     dumps(configdiffobjs, "commands") if configdiffobjs else ""
-        # )
-
-        if configdiffobjs:
-            diff["config_diff"] = (candidate)
+        diff["config_diff"] = (
+            dumps(configdiffobjs, "commands") if configdiffobjs else ""
+        )
 
         return diff
 

@@ -183,11 +183,15 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.c
 def get_candidate_config(module):
     candidate = ''
     if module.params['src']:
-        fd = open(module.params['src'], mode = 'r')
-        candidate = fd.read()
+        with open(module.params['src'], 'r') as f:
+            candidate = f.read().splitlines()
+
+        candidate_obj = FosNetworkConfig(indent=3)
+        candidate_obj.add(candidate)
+        candidate = dumps(candidate_obj, 'raw')
 
     elif module.params['lines']:
-        candidate_obj = FosNetworkConfig(indent=0)
+        candidate_obj = FosNetworkConfig(indent=3)
         parents = module.params['parents'] or list()
         candidate_obj.add(module.params['lines'], parents=parents)
         candidate = dumps(candidate_obj, 'raw')
@@ -263,7 +267,7 @@ def main():
         filename = ''
         backup_path = ''
         contents = get_config(module)
-        config = FosNetworkConfig(indent=0, contents=contents)
+        config = FosNetworkConfig(indent=3, contents=contents)
         result['__backup__'] = contents
         if module.params['backup_options']:
             filename = module.params['backup_options']["filename"]
@@ -334,7 +338,7 @@ def main():
         else:
             contents = running_config
 
-        running_config = FosNetworkConfig(indent=0, contents=contents)
+        running_config = FosNetworkConfig(indent=3, contents=contents)
 
     module.exit_json(**result)
 

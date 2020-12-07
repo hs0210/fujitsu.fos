@@ -11,7 +11,17 @@
       lines: 
         - lldp transmit
         - lldp receive
-        - no lldp notification
+        - lldp notification
         - exit
-      match: exact
-      
+      match: line
+
+# ---
+# - hosts: host
+#   gather_facts: no
+
+#   tasks:
+#   - name: configure interface settings
+#     fos_config:
+#       src: /home/cicd/ansible_collections/fujitsu/fos/tests/local_unit/playbooks/fos_config/candidate.cfg
+#       match: strict
+#       replace: block

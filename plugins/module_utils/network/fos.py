@@ -127,7 +127,7 @@ def load_config(module, commands):
 def get_sublevel_config(running_config, module):
     contents = list()
     current_config_contents = list()
-    sublevel_config = FosNetworkConfig(indent=0)
+    sublevel_config = FosNetworkConfig(indent=3)
     obj = running_config.get_object(module.params['parents'])
     if obj:
         contents = obj._children

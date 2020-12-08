@@ -124,42 +124,11 @@ def load_config(module, commands):
         module.fail_json(msg=to_text(exc))
 
 
-def get_sublevel_config(running_config, module):
-    contents = list()
-    current_config_contents = list()
-    sublevel_config = FosNetworkConfig(indent=3)
-    obj = running_config.get_object(module.params['parents'])
-    if obj:
-        contents = obj._children
-    for c in contents:
-        if isinstance(c, ConfigLine):
-            current_config_contents.append(c.raw)
-    sublevel_config.add(current_config_contents, module.params['parents'])
+def get_sublevel_config(running, parents=None):
+    sublevel_config = list()
+    running = running[running.find(''.join(parents[-1])):]
+    if running:
+        running = running[:running.find('\n\n')].strip()
+        sublevel_config = running.split('\n')
+        sublevel_config = sublevel_config[1:]
     return sublevel_config
-
-
-class FosNetworkConfig(NetworkConfig):
-
-    def load(self, contents):
-        self._config_text = contents
-
-    def _diff_none(self, other, path=None):
-        diff = list()
-        return diff
-
-    def _diff_line(self, other, path=None):
-        diff = list()
-
-        for item in self.items:
-            if str(item) == "exit":
-                for diff_item in diff:
-                    if diff_item._parents:
-                        if item._parents == diff_item._parents:
-                            diff.append(item)
-                            break
-                    else:
-                        diff.append(item)
-                        break
-            elif item not in other:
-                diff.append(item)
-        return diff

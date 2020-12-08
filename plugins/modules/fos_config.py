@@ -173,7 +173,6 @@ import time
 
 from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import ConnectionError
-from ansible_collections.fujitsu.fos.plugins.module_utils.network.fos import get_sublevel_config, FosNetworkConfig
 from ansible_collections.fujitsu.fos.plugins.module_utils.network.fos import run_commands, get_config, load_config
 from ansible_collections.fujitsu.fos.plugins.module_utils.network.fos import get_connection
 from ansible.module_utils.basic import AnsibleModule
@@ -183,15 +182,12 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.c
 def get_candidate_config(module):
     candidate = ''
     if module.params['src']:
-        with open(module.params['src'], 'r') as f:
-            candidate = f.read().splitlines()
-
-        candidate_obj = FosNetworkConfig(indent=3)
-        candidate_obj.add(candidate)
+        candidate_obj = NetworkConfig(indent=4)
+        candidate_obj.loadfp(module.params['src'])
         candidate = dumps(candidate_obj, 'raw')
 
     elif module.params['lines']:
-        candidate_obj = FosNetworkConfig(indent=3)
+        candidate_obj = NetworkConfig(indent=4)
         parents = module.params['parents'] or list()
         candidate_obj.add(module.params['lines'], parents=parents)
         candidate = dumps(candidate_obj, 'raw')
@@ -267,7 +263,7 @@ def main():
         filename = ''
         backup_path = ''
         contents = get_config(module)
-        config = FosNetworkConfig(indent=3, contents=contents)
+        config = NetworkConfig(indent=4, contents=contents)
         result['__backup__'] = contents
         if module.params['backup_options']:
             filename = module.params['backup_options']["filename"]
@@ -281,9 +277,8 @@ def main():
             if not os.path.exists(backup_path):
                 warnings.append('The backup path needs to be created in advance.')
             else:
-                fd = open(backup_path + '/' + filename, mode = 'w')
-                fd.write(contents)
-                fd.close()
+                with open(backup_path + '/' + filename, 'w') as f:
+                    f.write(contents)
 
     if any((module.params['lines'], module.params['src'])):
         match = module.params['match']
@@ -338,7 +333,7 @@ def main():
         else:
             contents = running_config
 
-        running_config = FosNetworkConfig(indent=3, contents=contents)
+        running_config = NetworkConfig(indent=4, contents=contents)
 
     module.exit_json(**result)
 

@@ -33,7 +33,7 @@ import re
 import time
 import json
 
-from ansible_collections.fujitsu.fos.plugins.module_utils.network.fos import FosNetworkConfig
+from ansible_collections.fujitsu.fos.plugins.module_utils.network.fos import get_sublevel_config
 from ansible.errors import AnsibleConnectionFailure
 from ansible.module_utils._text import to_text
 from ansible.module_utils.common._collections_compat import Mapping
@@ -176,15 +176,15 @@ class Cliconf(CliconfBase):
             raise ValueError("'replace' value %s in invalid, valid values are %s" % (diff_replace, ', '.join(option_values['diff_replace'])))
 
         # prepare candidate configuration
-        candidate_obj = NetworkConfig(indent=3, contents=candidate)
+        candidate_obj = NetworkConfig(indent=4, contents=candidate)
 
         if running and diff_match != "none" and diff_replace != "config":
             # running configuration
-            running_obj = NetworkConfig(indent=3, contents=running)
-
-            # running_obj = NetworkConfig(indent=3, ignore_lines=diff_ignore_lines)
-            # running_obj.load(running)
-            # # running_obj.add(['lldp receive','lldp transmit', 'lldp notification', 'exit'], parents = ['interface 0/13'])
+            running_obj = NetworkConfig(indent=4)
+            if path:
+                running_obj.add(get_sublevel_config(running=running, parents=path), parents=path)
+            else:
+                running_obj.load(running)
 
             configdiffobjs = candidate_obj.difference(
                 running_obj, path=path, match=diff_match, replace=diff_replace

@@ -5,8 +5,9 @@
   tasks:
   - name: configure interface settings
     fos_config:
-      # before: 'clock set 12/02/2020'
-      # lines: clock timezone 8 minutes 0
+      # before: clock set 12/02/2020
+      # after: clock timezone 8 minutes 0
+      # lines: clock timezone 9 minutes 0
       parents: interface 0/13
       lines: 
         - lldp transmit
@@ -23,5 +24,4 @@
 #   - name: configure interface settings
 #     fos_config:
 #       src: /home/cicd/ansible_collections/fujitsu/fos/tests/local_unit/playbooks/fos_config/candidate.cfg
-#       match: strict
-#       replace: block
+#       # replace: block

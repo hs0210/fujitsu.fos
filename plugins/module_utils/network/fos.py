@@ -34,10 +34,9 @@ import re
 import json
 
 from ansible.module_utils._text import to_text
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import to_list
 from ansible.module_utils.connection import Connection, ConnectionError
-
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import NetworkConfig, ConfigLine
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import to_list
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import NetworkConfig
 
 _DEVICE_CONFIGS = {}
 
@@ -123,12 +122,36 @@ def load_config(module, commands):
     except ConnectionError as exc:
         module.fail_json(msg=to_text(exc))
 
+def is_parents(command):
+    parents_set = ['interface', 'router']
+    for val in parents_set:
+        if command.startswith(val):
+            return True
+        else:
+            return False
 
-def get_sublevel_config(running, parents=None):
-    sublevel_config = list()
-    running = running[running.find(''.join(parents[-1])):]
-    if running:
-        running = running[:running.find('\n\n')].strip()
-        sublevel_config = running.split('\n')
-        sublevel_config = sublevel_config[1:]
-    return sublevel_config
+def load_running_config(running):
+    running_obj = NetworkConfig(indent=4)
+    running = running.strip().split('\n')
+
+    index = 0
+    while index < len(running):
+        if is_parents(running[index]):
+            parents = running[index] + '\n'
+            parents = parents.strip().split('\n')
+            children = list()
+            i = index + 1
+            while i < len(running) and running[i] != 'exit' and running[i] != '':
+                children.append(running[i])
+                i += 1
+            if i < len(running) and running[i] != '':
+                children.append(running[i])
+            index = i
+            running_obj.add(children, parents)
+        else:
+            line = running[index] + '\n'
+            line = line.strip().split('\n')
+            running_obj.add(list(), line)
+        index += 1
+
+    return running_obj

@@ -33,7 +33,7 @@ import re
 import time
 import json
 
-from ansible_collections.fujitsu.fos.plugins.module_utils.network.fos import get_sublevel_config
+from ansible_collections.fujitsu.fos.plugins.module_utils.network.fos import load_running_config
 from ansible.errors import AnsibleConnectionFailure
 from ansible.module_utils._text import to_text
 from ansible.module_utils.common._collections_compat import Mapping
@@ -179,13 +179,7 @@ class Cliconf(CliconfBase):
         candidate_obj = NetworkConfig(indent=4, contents=candidate)
 
         if running and diff_match != "none" and diff_replace != "config":
-            # running configuration
-            running_obj = NetworkConfig(indent=4)
-            if path:
-                running_obj.add(get_sublevel_config(running=running, parents=path), parents=path)
-            else:
-                running_obj.load(running)
-
+            running_obj = load_running_config(running=running)
             configdiffobjs = candidate_obj.difference(
                 running_obj, path=path, match=diff_match, replace=diff_replace
             )

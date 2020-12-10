@@ -9,6 +9,7 @@ Cli = 'ansible-playbook -i '
 Inventory = '/home/cicd/inventory/inventory '
 PlaybookPath = 'tests/local_unit/playbooks/fos_command/'
 
+
 class Test(unittest.TestCase):
     def test_fos_command_simple(self):
         command = Cli + Inventory + PlaybookPath + 'show_version.yaml -vvv | grep "Current Runtime Version"'

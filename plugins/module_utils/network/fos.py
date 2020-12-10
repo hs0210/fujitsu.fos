@@ -122,6 +122,7 @@ def load_config(module, commands):
     except ConnectionError as exc:
         module.fail_json(msg=to_text(exc))
 
+
 def is_parents(line):
     parents_set = ['interface', 'router']
     for val in parents_set:
@@ -130,14 +131,16 @@ def is_parents(line):
         else:
             return False
 
+
 def to_parents(line):
     line = line + '\n'
     return line.strip().split('\n')
 
+
 def load_running_config(running):
     running = running.strip().split('\n')
     running_obj = NetworkConfig(indent=4)
-    
+
     # Transform running to running_obj
     index = 0
     while index < len(running):

@@ -10,6 +10,7 @@ Cli = 'ansible-playbook -i '
 Inventory = '/home/cicd/inventory/inventory '
 PlaybookPath = 'tests/local_unit/playbooks/fos_facts/'
 
+
 class Test(unittest.TestCase):
     def test_fos_facts_gather_subset_default(self):
         command = Cli + Inventory + PlaybookPath + 'gather_subset_default.yaml -vvv'
@@ -49,7 +50,6 @@ class Test(unittest.TestCase):
         self.assertIn('ET-7648BRA-FOS', str(ansible_net_model))
         ansible_net_burned_in_mac = re.findall(r'ansible_net_burned_in_mac(.+?),', output, re.S)
         self.assertIn('00:30:AB:F4:CA:DA', str(ansible_net_burned_in_mac))
-
 
 
 if __name__ == '__main__':

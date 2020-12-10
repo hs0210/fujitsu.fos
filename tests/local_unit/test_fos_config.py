@@ -10,6 +10,7 @@ Cli = 'ansible-playbook -i '
 Inventory = '/home/cicd/inventory/inventory '
 PlaybookPath = 'tests/local_unit/playbooks/fos_config/'
 
+
 class Test(unittest.TestCase):
 
     # def test_fos_config_no_change(self):
@@ -22,14 +23,14 @@ class Test(unittest.TestCase):
         retcode, output = subprocess.getstatusoutput('mkdir -p /home/cicd/pswitch')
         self.assertEqual(retcode, 0)
         command = Cli + Inventory + PlaybookPath + 'backup.yaml -vvv'
-        retcode, output= subprocess.getstatusoutput(command)
+        retcode, output = subprocess.getstatusoutput(command)
         self.assertEqual(retcode, 0)
         retcode, output = subprocess.getstatusoutput('ls /home/cicd/pswitch | grep backup.cfg')
         self.assertEqual(retcode, 0)
         self.assertEqual(output, 'backup.cfg')
         retcode, output = subprocess.getstatusoutput('rm -fr /home/cicd/pswitch')
         self.assertEqual(retcode, 0)
-    
+
     # def test_fos_config_src(self):
     #     command = Cli + Inventory + PlaybookPath + 'src.yaml -vvv'
     #     retcode, output = subprocess.getstatusoutput(command)
@@ -179,7 +180,6 @@ class Test(unittest.TestCase):
     #     )
     #     # commands = parents + lines
     #     self.execute_module(changed=True, commands=lines, sort=False)
-
 
 
 if __name__ == '__main__':

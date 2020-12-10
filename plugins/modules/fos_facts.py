@@ -43,6 +43,7 @@ options:
         with an initial C(M(!)) to specify that a specific subset should
         not be collected.
     default: [ '!config' ]
+    type: list
 """
 
 EXAMPLES = """

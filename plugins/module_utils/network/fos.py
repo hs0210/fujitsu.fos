@@ -122,36 +122,41 @@ def load_config(module, commands):
     except ConnectionError as exc:
         module.fail_json(msg=to_text(exc))
 
-def is_parents(command):
+def is_parents(line):
     parents_set = ['interface', 'router']
     for val in parents_set:
-        if command.startswith(val):
+        if line.startswith(val):
             return True
         else:
             return False
 
-def load_running_config(running):
-    running_obj = NetworkConfig(indent=4)
-    running = running.strip().split('\n')
+def to_parents(line):
+    line = line + '\n'
+    return line.strip().split('\n')
 
+def load_running_config(running):
+    running = running.strip().split('\n')
+    running_obj = NetworkConfig(indent=4)
+    
+    # Transform running to running_obj
     index = 0
     while index < len(running):
+        # If line is empty, ignore it
+        if running[index] == '':
+            index += 1
+            continue
+        parents = to_parents(running[index])
+        children = list()
+        # If this line is parents, find it's children
         if is_parents(running[index]):
-            parents = running[index] + '\n'
-            parents = parents.strip().split('\n')
-            children = list()
-            i = index + 1
-            while i < len(running) and running[i] != 'exit' and running[i] != '':
-                children.append(running[i])
-                i += 1
-            if i < len(running) and running[i] != '':
-                children.append(running[i])
-            index = i
-            running_obj.add(children, parents)
-        else:
-            line = running[index] + '\n'
-            line = line.strip().split('\n')
-            running_obj.add(list(), line)
+            index += 1
+            while index < len(running) and running[index] != 'exit' and running[index] != '':
+                children.append(running[index])
+                index += 1
+            if index < len(running) and running[index] != '':
+                children.append(running[index])
+        # Add parents and children into running_obj
+        running_obj.add(children, parents)
         index += 1
 
     return running_obj

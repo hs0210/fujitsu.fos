@@ -135,6 +135,7 @@ options:
           - The filename to be used to store the backup configuration. If the the filename
             is not given it will be generated based on the hostname, current time and date
             in format defined by <hostname>_config.<current-date>@<current-time>
+        type: str
       dir_path:
         description:
           - This option provides the path ending with directory name in which the backup

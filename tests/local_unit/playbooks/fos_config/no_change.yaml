@@ -3,12 +3,6 @@
   gather_facts: no
 
   tasks:
-  - name: configure interface settings
+  - name: test no config change
     fos_config:
-      lines:
-        # - no shutdown
-        - lldp transmit
-        - lldp receive
-        # - no lldp receive
-        # - no lldp notification
-      parents: interface 0/14
+      lines: clock timezone 9 minutes 0

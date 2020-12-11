@@ -13,11 +13,11 @@ PlaybookPath = 'tests/local_unit/playbooks/fos_config/'
 
 class Test(unittest.TestCase):
 
-    # def test_fos_config_no_change(self):
-    #     command = Cli + Inventory + PlaybookPath + 'no_change.yaml -vvv'
-    #     retcode, output = subprocess.getstatusoutput(command)
-    #     self.assertEqual(retcode, 0)
-    #     print(output)
+    def test_fos_config_no_change(self):
+        command = Cli + Inventory + PlaybookPath + 'no_change.yaml -vvv | grep "changed=0"'
+        retcode, output = subprocess.getstatusoutput(command)
+        self.assertEqual(retcode, 0)
+        self.assertIn('changed=0', output)
 
     def test_fos_config_backup(self):
         retcode, output = subprocess.getstatusoutput('mkdir -p /home/cicd/pswitch')

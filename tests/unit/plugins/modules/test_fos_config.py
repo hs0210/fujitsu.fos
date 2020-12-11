@@ -75,23 +75,6 @@ class TestFosConfigModule(TestFosModule):
         )
         self.execute_module()
 
-    def test_fos_config_src(self):
-        src = load_fixture('fos_config', 'candidate.cfg')
-        args = dict(src=src)
-        set_module_args(args)
-
-        self.conn.get_diff = MagicMock(
-            return_value=self.cliconf_obj.get_diff(src, self.running_config)
-        )
-        config = [
-            'hostname switch01',
-            'interface Ethernet1',
-            'description test interface',
-            'no shutdown',
-            'ip routing',
-        ]
-        self.execute_module(changed=True, commands=config)
-
     def test_fos_config_lines(self):
         lines = ['hostname switch01', 'ip domain-name eng.ansible.com']
         args = dict(lines=lines)

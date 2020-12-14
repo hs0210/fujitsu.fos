@@ -124,13 +124,27 @@ def load_config(module, commands):
 
 
 def is_parents(line):
-    parents_set = ['interface', 'router']
+    parents_set = [
+        'interface',
+        'ip access-list',
+        'line console',
+        'line console2',
+        'line ssh'
+        'line telnet',
+        'aaa ias-user',
+        'policy-map',
+        'class-map match-all',
+        'router rip',
+        'router ospf',
+        'router bgp',
+        'route-map',
+        'mac access-list extended',
+        'tacacs-server host',
+    ]
     for val in parents_set:
         if line.startswith(val):
             return True
-        else:
-            return False
-
+    return False
 
 def to_parents(line):
     line = line + '\n'

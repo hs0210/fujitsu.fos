@@ -146,6 +146,7 @@ def is_parents(line):
             return True
     return False
 
+
 def to_parents(line):
     line = line + '\n'
     return line.strip().split('\n')

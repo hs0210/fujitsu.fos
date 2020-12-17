@@ -8,4 +8,4 @@
       backup: yes
       backup_options:
         filename: backup.cfg
-        dir_path: /home/cicd/pswitch
+        dir_path: ~/pswitch

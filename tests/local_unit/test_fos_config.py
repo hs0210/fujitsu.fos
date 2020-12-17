@@ -20,15 +20,15 @@ class Test(unittest.TestCase):
         self.assertIn('changed=0', output)
 
     def test_fos_config_backup(self):
-        retcode, output = subprocess.getstatusoutput('mkdir -p /home/cicd/pswitch')
+        retcode, output = subprocess.getstatusoutput('mkdir -p ~/pswitch')
         self.assertEqual(retcode, 0)
         command = Cli + Inventory + PlaybookPath + 'backup.yaml -vvv'
         retcode, output = subprocess.getstatusoutput(command)
         self.assertEqual(retcode, 0)
-        retcode, output = subprocess.getstatusoutput('ls /home/cicd/pswitch | grep backup.cfg')
+        retcode, output = subprocess.getstatusoutput('ls ~/pswitch | grep backup.cfg')
         self.assertEqual(retcode, 0)
         self.assertEqual(output, 'backup.cfg')
-        retcode, output = subprocess.getstatusoutput('rm -fr /home/cicd/pswitch')
+        retcode, output = subprocess.getstatusoutput('rm -fr ~/pswitch')
         self.assertEqual(retcode, 0)
 
     def test_fos_config_src(self):

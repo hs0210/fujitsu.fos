@@ -1,9 +1,16 @@
 pipeline {
-    agent any
+    agent {
+        label 'cicd-slave'
+    }
+
     stages {
         stage('test') {
             steps {
-                sh 'make test'
+                sh '''
+                    . /etc/profile
+                    make copy
+                    make test
+                '''
             }
         }
     }

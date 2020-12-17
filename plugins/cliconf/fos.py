@@ -26,7 +26,7 @@ short_description: Use fos cliconf to run command on FUJITSU PSWITCH platform
 description:
   - This os10 plugin provides low level abstraction apis for
     sending and receiving CLI commands from FUJITSU PSWITCH.
-version_added: 2.9
+version_added: 2.10
 """
 
 import re

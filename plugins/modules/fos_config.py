@@ -1,20 +1,9 @@
 #!/usr/bin/python
-#
-# This file is part of Ansible
-#
-# Ansible is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# Ansible is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
-#
+# -*- coding: utf-8 -*-
+
+# Copyright (c) 2020 Fujitsu Inc.
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
@@ -25,7 +14,7 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = """
 ---
 module: fos_config
-version_added: "2.9"
+version_added: "2.10"
 short_description: Manage FUJITSU PSWITCH configuration sections
 description:
   - fos configurations use a simple block indent file syntax
@@ -37,7 +26,7 @@ options:
     description:
       - The ordered set of commands that should be configured in the
         section.  The commands must be the exact same commands as found
-        in the device running-config.  Be sure to note the configuration
+        in the mode Global Config.  Be sure to note the configuration
         command syntax as some commands are automatically modified by the
         device config parser.
     type: list
@@ -54,8 +43,8 @@ options:
       - Specifies the source path to the file that contains the configuration
         or configuration template to load.  The path to the source file can
         either be the full path on the Ansible control host or a relative
-        path from the playbook or role root directory.  This argument is mutually
-        exclusive with I(lines), I(parents).
+        path from the playbook.  This argument is mutually exclusive with
+        I(lines), I(parents).
     type: path
   before:
     description:
@@ -133,17 +122,13 @@ options:
       filename:
         description:
           - The filename to be used to store the backup configuration. If the the filename
-            is not given it will be generated based on the hostname, current time and date
-            in format defined by <hostname>_config.<current-date>@<current-time>
+            is not given it will be generated based on current time and date in format defined
+            by config.<current-date>@<current-time>
         type: str
       dir_path:
         description:
           - This option provides the path ending with directory name in which the backup
-            configuration file will be stored. If the directory does not exist it will be first
-            created and the filename is either the value of C(filename) or default filename
-            as described in C(filename) options description. If the path value is not given
-            in that case a I(backup) directory will be created in the current working directory
-            and backup configuration will be copied in C(filename) within I(backup) directory.
+            configuration file will be stored. The backup path needs to be created in advance.
         type: path
     type: dict
 """
@@ -267,11 +252,11 @@ def main():
         config = NetworkConfig(indent=4, contents=contents)
         result['__backup__'] = contents
         if module.params['backup_options']:
-            filename = module.params['backup_options']["filename"]
-            backup_path = module.params['backup_options']["dir_path"]
+            filename = module.params['backup_options']['filename']
+            backup_path = module.params['backup_options']['dir_path']
         if not filename:
-            tstamp = time.strftime("%Y-%m-%d@%H:%M:%S", time.localtime(time.time()))
-            filename = "config.%s" % (tstamp)
+            tstamp = time.strftime('%Y-%m-%d@%H:%M:%S', time.localtime(time.time()))
+            filename = 'config.%s' % (tstamp)
         if not backup_path:
             warnings.append('The backup path needs to be specified.')
         else:

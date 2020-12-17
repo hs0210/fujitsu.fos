@@ -15,11 +15,13 @@ delete
 
 
 ## Installation
+### From source
 
-Use this command to install the latest version of the fos collection from Ansible Galaxy:
+The [fujitsu/ansible-collection-for-fos repository](https://github.com/fujitsu/ansible-collection-for-fos) contains the code for the collection.
 
-    ansible-galaxy collection install fujitsu.fos
+### From Ansible Galaxy
 
+TODO
 
 ## Version compatibility
 
@@ -29,6 +31,14 @@ Use this command to install the latest version of the fos collection from Ansibl
 
 ## Using this collection
 
+#### Before your begin
+
+Install ansible.netcommon
+```
+ansible-galaxy collection install ansible.netcommon
+```
+
+#### Example
 You can refer to the files in the example folder, modify the IP and other contents and execute:
 
 ```
@@ -73,5 +83,3 @@ ansible_network_os=fos
         - lldp receive
       parents: interface 0/16
 ```
-
-

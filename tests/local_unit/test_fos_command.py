@@ -17,7 +17,7 @@ class Test(unittest.TestCase):
         if retcode:
             self.fail(output)
         else:
-            self.assertNotEqual(output.find("Current Runtime Version"), -1)
+            self.assertNotEqual(output.find('Current Runtime Version'), -1)
 
     def test_fos_command_wait_for(self):
         command = Cli + Inventory + PlaybookPath + 'wait_for.yaml -vvv'
@@ -25,10 +25,10 @@ class Test(unittest.TestCase):
         if retcode:
             self.fail(output)
         else:
-            self.assertNotEqual(output.find("Current Runtime Version"), -1)
+            self.assertNotEqual(output.find('Current Runtime Version'), -1)
 
     def test_fos_command_wait_for_fails(self):
-        command = Cli + Inventory + PlaybookPath + 'wait_for_fail.yaml -vvv'
+        command = Cli + Inventory + PlaybookPath + 'wait_for_fails.yaml -vvv'
         retcode, output = subprocess.getstatusoutput(command)
         if not retcode:
             self.fail(output)
@@ -39,10 +39,10 @@ class Test(unittest.TestCase):
         if retcode:
             self.fail(output)
         else:
-            self.assertNotEqual(output.find("Current Runtime Version"), -1)
+            self.assertNotEqual(output.find('Current Runtime Version'), -1)
 
-    def test_fos_command_match_all_fail(self):
-        command = Cli + Inventory + PlaybookPath + 'match_all_fail.yaml -vvv'
+    def test_fos_command_match_all_fails(self):
+        command = Cli + Inventory + PlaybookPath + 'match_all_fails.yaml -vvv'
         retcode, output = subprocess.getstatusoutput(command)
         if not retcode:
             self.fail(output)

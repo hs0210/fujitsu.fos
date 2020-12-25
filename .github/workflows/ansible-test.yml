@@ -39,8 +39,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Units (${{ matrix.ansible }})
     strategy:
-      # As soon as the first unit test fails, cancel the others to free up the CI queue
-      fail-fast: true
       matrix:
         ansible:
           - stable-2.10
@@ -64,5 +62,5 @@ jobs:
         run: ansible-galaxy collection install ansible.netcommon -p .
 
       - name: Run unit tests for all Python versions
-        run: ansible-test units -v --color --docker --coverage
+        run: ansible-test units -v --color --docker
         working-directory: ./ansible_collections/fujitsu/fos

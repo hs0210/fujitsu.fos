@@ -1,7 +1,7 @@
 #
 # (c) 2020 Red Hat Inc.
 #
-# (c) 2020 Fujitsu Inc.
+# Copyright 2020 FUJITSU LIMITED.
 #
 # This file is part of Ansible
 #

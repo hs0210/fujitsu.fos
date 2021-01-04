@@ -26,6 +26,11 @@ class Test(unittest.TestCase):
         retcode, output = subprocess.getstatusoutput(command)
         if retcode:
             self.fail(output)
+
+        command = Cli + Inventory + PlaybookPath + 'before.yaml -vvv'
+        retcode, output = subprocess.getstatusoutput(command)
+        if retcode:
+            self.fail(output)
         else:
             updates = [
                 '"updates": [',

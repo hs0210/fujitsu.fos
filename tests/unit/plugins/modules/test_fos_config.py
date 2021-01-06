@@ -66,7 +66,7 @@ class TestFosConfigModule(TestFosModule):
         self.load_config.return_value = None
 
     def test_fos_config_no_change(self):
-        lines = ['hostname localhost']
+        lines = ['clock timezone 9 minutes 0']
         args = dict(lines=lines)
         set_module_args(args)
 
@@ -76,7 +76,7 @@ class TestFosConfigModule(TestFosModule):
         self.execute_module()
 
     def test_fos_config_lines(self):
-        lines = ['hostname switch01', 'ip domain-name eng.ansible.com']
+        lines = ['clock timezone 8 minutes 0', 'ip routing']
         args = dict(lines=lines)
         set_module_args(args)
 
@@ -85,12 +85,12 @@ class TestFosConfigModule(TestFosModule):
                 '\n'.join(lines), self.running_config
             )
         )
-        config = ['hostname switch01']
+        config = ['clock timezone 8 minutes 0']
         self.execute_module(changed=True, commands=config)
 
     def test_fos_config_parents(self):
-        lines = ['ip address 1.2.3.4/5', 'no shutdown']
-        parents = ['interface Ethernet10']
+        lines = ['lldp transmit', 'lldp notification']
+        parents = ['interface 0/12']
         args = dict(lines=lines, parents=parents)
         candidate = parents + lines
         set_module_args(args)
@@ -101,14 +101,14 @@ class TestFosConfigModule(TestFosModule):
             )
         )
         config = [
-            'interface Ethernet10',
-            'ip address 1.2.3.4/5',
-            'no shutdown',
+            'interface 0/12',
+            'lldp transmit',
+            'lldp notification',
         ]
         self.execute_module(changed=True, commands=config, sort=False)
 
     def test_fos_config_before(self):
-        lines = ['hostname switch01', 'ip domain-name eng.ansible.com']
+        lines = ['clock timezone 8 minutes 0', 'ip routing']
         before = ['before command']
         args = dict(lines=lines, before=before)
         set_module_args(args)
@@ -118,12 +118,12 @@ class TestFosConfigModule(TestFosModule):
                 '\n'.join(lines), self.running_config
             )
         )
-        config = ['before command', 'hostname switch01']
+        config = ['before command', 'clock timezone 8 minutes 0']
         result = self.execute_module(changed=True, commands=config)
         self.assertEqual('before command', result['commands'][0])
 
     def test_fos_config_after(self):
-        lines = ['hostname switch01', 'ip domain-name eng.ansible.com']
+        lines = ['clock timezone 8 minutes 0', 'ip routing']
         args = dict(lines=lines, after=['after command'])
 
         set_module_args(args)
@@ -132,7 +132,7 @@ class TestFosConfigModule(TestFosModule):
                 '\n'.join(lines), self.running_config
             )
         )
-        config = ['after command', 'hostname switch01']
+        config = ['after command', 'clock timezone 8 minutes 0']
         result = self.execute_module(changed=True, commands=config)
         self.assertEqual('after command', result['commands'][-1])
 

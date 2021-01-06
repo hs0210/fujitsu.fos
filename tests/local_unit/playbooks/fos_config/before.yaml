@@ -3,7 +3,7 @@
   gather_facts: no
 
   tasks:
-  - name: initial config
+  - name: before config
     fos_config:
       before: clock timezone 8 minutes 0
       lines:

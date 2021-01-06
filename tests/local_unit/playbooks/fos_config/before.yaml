@@ -5,7 +5,7 @@
   tasks:
   - name: initial config
     fos_config:
-      before: clock timezone 9 minutes 0
+      before: clock timezone 8 minutes 0
       lines:
         - lldp transmit
         - no lldp receive

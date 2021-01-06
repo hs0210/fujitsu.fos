@@ -3,7 +3,7 @@
   gather_facts: no
 
   tasks:
-  - name: test match strict
+  - name: match exact
     fos_config:
       lines:
         - lldp transmit

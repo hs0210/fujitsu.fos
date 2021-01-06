@@ -3,7 +3,7 @@
   gather_facts: no
 
   tasks:
-  - name: "show version"
+  - name: "match any"
     fos_command:
       commands:
          - show version

@@ -3,7 +3,7 @@
   gather_facts: no
 
   tasks:
-  - name: "show version"
+  - name: "wait for"
     fos_command:
       commands:
          - show version

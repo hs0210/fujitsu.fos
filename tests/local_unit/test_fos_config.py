@@ -19,7 +19,36 @@ def find_updates(output):
     return updates
 
 
+def get_running_config():
+    command = Cli + Inventory + PlaybookPath + 'get_config.yaml -vvv'
+    output = subprocess.getoutput(command)
+    begain = output.find('"stdout_lines"')
+    end = output.find(']', begain)
+    config = output[begain: end + 1]
+    return config
+
+
+def get_part_config(config, begain, end, offset=0):
+    begains = config.find(begain)
+    ends = config.find(end, begains)
+    return config[begains: ends + offset]
+
+
 class Test(unittest.TestCase):
+
+    def test_initial_config(self):
+        command = Cli + Inventory + PlaybookPath + 'initial.yaml -vvv'
+        retcode, output = subprocess.getstatusoutput(command)
+        if retcode:
+            self.fail(output)
+
+        config = get_running_config()
+        self.assertNotEqual(config.find('"clock timezone 9 minutes 0"'), -1)
+
+        config = get_part_config(config, begain='"interface 0/13"', end='"exit"', offset=len('"exit"'))
+        self.assertNotEqual(config.find('"lldp transmit"'), -1)
+        self.assertEqual(config.find('"lldp receive"'), -1)
+        self.assertNotEqual(config.find('"lldp notification"'), -1)
 
     def test_fos_config_before(self):
         command = Cli + Inventory + PlaybookPath + 'initial.yaml -vvv'
@@ -34,12 +63,15 @@ class Test(unittest.TestCase):
         else:
             updates = [
                 '"updates": [',
-                '        "clock timezone 9 minutes 0",',
+                '        "clock timezone 8 minutes 0",',
                 '        "interface 0/13",',
                 '        "no lldp receive"',
                 '    ]'
             ]
             self.assertEqual(find_updates(output), updates)
+
+        config = get_running_config()
+        self.assertNotEqual(config.find('"clock timezone 8 minutes 0"'), -1)
 
     def test_fos_config_no_change(self):
         command = Cli + Inventory + PlaybookPath + 'initial.yaml -vvv'
@@ -55,6 +87,10 @@ class Test(unittest.TestCase):
             self.assertNotEqual(output.find('changed=0'), -1)
 
     def test_fos_config_backup(self):
+        retcode, output = subprocess.getstatusoutput('rm -fr ~/pswitch')
+        if retcode:
+            self.fail(output)
+
         retcode, output = subprocess.getstatusoutput('mkdir -p ~/pswitch')
         if retcode:
             self.fail(output)
@@ -64,37 +100,35 @@ class Test(unittest.TestCase):
         if retcode:
             self.fail(output)
 
-        retcode, output = subprocess.getstatusoutput('ls ~/pswitch | grep backup.cfg')
+        retcode, output = subprocess.getstatusoutput('ls ~/pswitch')
         if retcode:
             self.fail(output)
         else:
             self.assertEqual(output, 'backup.cfg')
+
+        retcode, output = subprocess.getstatusoutput('cat ~/pswitch/backup.cfg')
+        if retcode:
+            self.fail(output)
+        else:
+            self.assertEqual(output.find('!Current Configuration:'), 0)
 
         retcode, output = subprocess.getstatusoutput('rm -fr ~/pswitch')
         if retcode:
             self.fail(output)
 
     def test_fos_config_src(self):
-        command = Cli + Inventory + PlaybookPath + 'src_1.yaml -vvv'
+        command = Cli + Inventory + PlaybookPath + 'initial.yaml -vvv'
         retcode, output = subprocess.getstatusoutput(command)
         if retcode:
             self.fail(output)
-        else:
-            self.assertNotEqual(output.find('changed=1'), -1)
 
-        command = Cli + Inventory + PlaybookPath + 'src_2.yaml -vvv'
+        command = Cli + Inventory + PlaybookPath + 'src.yaml -vvv'
         retcode, output = subprocess.getstatusoutput(command)
         if retcode:
             self.fail(output)
-        else:
-            self.assertNotEqual(output.find('changed=1'), -1)
 
-        command = Cli + Inventory + PlaybookPath + 'src_2.yaml -vvv'
-        retcode, output = subprocess.getstatusoutput(command)
-        if retcode:
-            self.fail(output)
-        else:
-            self.assertNotEqual(output.find('changed=0'), -1)
+        config = get_part_config(config=get_running_config(), begain='"interface 0/13"', end='"exit"', offset=len('"exit"'))
+        self.assertNotEqual(config.find('"lldp receive"'), -1)
 
     def test_fos_config_match_exact(self):
         command = Cli + Inventory + PlaybookPath + 'initial.yaml -vvv'
@@ -117,6 +151,11 @@ class Test(unittest.TestCase):
             ]
             self.assertEqual(find_updates(output), updates)
 
+        config = get_part_config(config=get_running_config(), begain='"interface 0/13"', end='"exit"', offset=len('"exit"'))
+        self.assertNotEqual(config.find('"lldp transmit"'), -1)
+        self.assertNotEqual(config.find('"lldp receive"'), -1)
+        self.assertNotEqual(config.find('"lldp notification"'), -1)
+
     def test_fos_config_replace_blocak(self):
         command = Cli + Inventory + PlaybookPath + 'initial.yaml -vvv'
         retcode, output = subprocess.getstatusoutput(command)
@@ -137,6 +176,11 @@ class Test(unittest.TestCase):
                 '    ]'
             ]
             self.assertEqual(find_updates(output), updates)
+
+        config = get_part_config(config=get_running_config(), begain='"interface 0/13"', end='"exit"', offset=len('"exit"'))
+        self.assertNotEqual(config.find('"lldp transmit"'), -1)
+        self.assertNotEqual(config.find('"lldp receive"'), -1)
+        self.assertNotEqual(config.find('"lldp notification"'), -1)
 
 
 if __name__ == '__main__':

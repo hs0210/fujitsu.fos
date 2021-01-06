@@ -3,6 +3,6 @@
   gather_facts: no
 
   tasks:
-  - name: test no config change
+  - name: no config change
     fos_config:
       lines: clock timezone 9 minutes 0

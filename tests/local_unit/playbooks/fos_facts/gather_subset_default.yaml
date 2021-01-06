@@ -3,7 +3,7 @@
   gather_facts: no
 
   tasks:
-  - name: "get hardware fact"
+  - name: "get default fact"
     fos_facts:
      gather_subset:
       - "default"

@@ -5,4 +5,4 @@
   tasks:
   - name: configure interface settings
     fos_config:
-      src: ./tests/local_unit/playbooks/fos_config/candidate_2.cfg
+      src: ./tests/local_unit/playbooks/fos_config/candidate.cfg

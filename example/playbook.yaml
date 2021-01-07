@@ -6,12 +6,11 @@
     fos_command:
       commands:
         - show version
-        - show hardware
 
   - name: "get hardware fact"
     fos_facts:
       gather_subset:
-       - "config"
+       - "hardware"
 
   - name: "configure interface settings"
     fos_config:

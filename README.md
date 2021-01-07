@@ -1,25 +1,36 @@
 # Ansible Network Collection for Fujitsu PSWITCH
 
+## Collection contents
 
-### Collection contents
+The Ansible Network Collection for Fujitsu PSWITCH includes a variety of Ansible content to help automate the management of Fujitsu PSWITCHS.
 
-delete
+## Collection core modules
 
-### Collection core modules
+- **fos_command.py** — Run commands in Privileged EXEC modes
 
-- **fos_command.py** — Run commands on devices running PSWITCH
+- **fos_config.py** — Manage configurations in Global Config modes
 
-- **fos_config.py** — Manage configuration on devices running PSWITCH
-
-- **fos_facts.py** — Collect facts devices running PSWITCH
+- **fos_facts.py** — Collect facts
 
 
 ## Installation
-### From source
+#### From source
 
 The [fujitsu/ansible-collection-for-fos repository](https://github.com/fujitsu/ansible-collection-for-fos) contains the code for the collection.
 
-### From Ansible Galaxy
+Install ansible.netcommon
+```
+ansible-galaxy collection install ansible.netcommon
+```
+
+Copy plugins
+```
+mkdir -p ~/.ansible/collections/ansible_collections/fujitsu/fos/
+cp -r plugins/ ~/.ansible/
+cp -r plugins/ ~/.ansible/collections/ansible_collections/fujitsu/fos/
+```
+
+#### From Ansible Galaxy
 
 TODO
 
@@ -28,21 +39,13 @@ TODO
 * Ansible version 2.10 or later.
 * Python 2.7 or higher and Python 3.5 or higher
 
-
 ## Using this collection
-
-#### Before your begin
-
-Install ansible.netcommon
-```
-ansible-galaxy collection install ansible.netcommon
-```
 
 #### Example
 You can refer to the files in the example folder, modify the IP and other contents and execute:
 
 ```
-ansible-playbook -i ./inventory playbook.yaml
+ansible-playbook -i ./inventory ./playbook.yaml
 ```
 
 **inventory**
@@ -69,12 +72,11 @@ ansible_network_os=fos
     fos_command:
       commands:
         - show version
-        - show hardware
 
   - name: "get hardware fact"
     fos_facts:
       gather_subset:
-       - "config"
+       - "hardware"
 
   - name: "configure interface settings"
     fos_config:

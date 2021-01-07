@@ -1,4 +1,5 @@
 authors:
+- Zhou Hao <zhouhao@cn.fujitsu.com>
 - Hu Shuai <hus.fnst@cn.fujitsu.com>
 dependencies:
   ansible.netcommon: '>=1.0.0'

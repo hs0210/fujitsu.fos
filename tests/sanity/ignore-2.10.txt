@@ -5,3 +5,5 @@ plugins/modules/fos_facts.py validate-modules:parameter-list-no-elements
 plugins/modules/fos_facts.py validate-modules:invalid-documentation
 plugins/modules/fos_command.py validate-modules:parameter-list-no-elements
 plugins/modules/fos_command.py validate-modules:invalid-documentation
+plugins/modules/fos_vlan.py validate-modules:parameter-list-no-elements
+plugins/modules/fos_vlan.py validate-modules:invalid-documentation

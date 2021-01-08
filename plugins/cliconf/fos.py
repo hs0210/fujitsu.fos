@@ -72,6 +72,34 @@ class Cliconf(CliconfBase):
         resp['response'] = results
         return resp
 
+    @enable_mode
+    def edit_vlan(self, candidate=None, commit=True, replace=None, comment=None):
+        resp = {}
+        operations = self.get_device_operations()
+        self.check_edit_config_capability(operations, candidate, commit, replace, comment)
+
+        results = []
+        requests = []
+        if commit:
+            if not self._connection.get_prompt().endswith(b'(Vlan)#'):
+                self.send_command('vlan database')
+            for line in to_list(candidate):
+                if not isinstance(line, Mapping):
+                    line = {'command': line}
+
+                cmd = line['command']
+                if cmd != 'end' and cmd[0] != '!':
+                    results.append(self.send_command(**line))
+                    requests.append(cmd)
+
+            self.send_command('end')
+        else:
+            raise ValueError('check mode is not supported')
+
+        resp['request'] = requests
+        resp['response'] = results
+        return resp
+
     def get(self, command=None, prompt=None, answer=None, sendonly=False, output=None, newline=True, check_all=False):
         if not command:
             raise ValueError('must provide value of command to execute')

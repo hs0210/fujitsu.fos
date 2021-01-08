@@ -41,10 +41,11 @@ options:
   src:
     description:
       - Specifies the source path to the file that contains the configuration
-        or configuration template to load.  The path to the source file can
-        either be the full path on the Ansible control host or a relative
-        path from the playbook.  This argument is mutually exclusive with
-        I(lines), I(parents).
+        or configuration template to load and all the configuration will be
+        send to the device. The path to the source file can either be the
+        full path on the Ansible control host or a relative path from the
+        playbook.  This argument is mutually exclusive with I(lines), I(parents).
+        When there are multiple settings, exit cannot be less in the src file.
     type: path
   before:
     description:
@@ -168,7 +169,7 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.c
 def get_candidate_config(module):
     candidate = ''
     if module.params['src']:
-        candidate_obj = NetworkConfig(indent=4)
+        candidate_obj = NetworkConfig(indent=0)
         candidate_obj.loadfp(module.params['src'])
         candidate = dumps(candidate_obj, 'raw')
 
@@ -249,7 +250,6 @@ def main():
         filename = ''
         backup_path = ''
         contents = get_config(module)
-        config = NetworkConfig(indent=4, contents=contents)
         result['__backup__'] = contents
         if module.params['backup_options']:
             filename = module.params['backup_options']['filename']
@@ -266,7 +266,7 @@ def main():
                 with open(backup_path + '/' + filename, 'w') as f:
                     f.write(contents)
 
-    if any((module.params['lines'], module.params['src'])):
+    if module.params['lines']:
         match = module.params['match']
         replace = module.params['replace']
         path = module.params['parents']
@@ -296,6 +296,21 @@ def main():
                     connection.edit_config(candidate=commands)
 
             result['changed'] = True
+
+    if module.params['src']:
+        commands = get_candidate_config(module).split('\n')
+
+        if module.params['before']:
+            commands[:0] = module.params['before']
+
+        if module.params['after']:
+            commands.extend(module.params['after'])
+
+        result['commands'] = commands
+        result['updates'] = commands
+        if not module.check_mode:
+            if commands:
+                connection.edit_config(candidate=commands)
 
     running_config = module.params['running_config']
     startup_config = None

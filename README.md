@@ -12,6 +12,8 @@ The Ansible Network Collection for Fujitsu PSWITCH includes a variety of Ansible
 
 - **fos_facts.py** — Collect facts
 
+- **fos_vlan.py** — Manage configurations in Vlan Config modes
+
 
 ## Installation
 #### From source

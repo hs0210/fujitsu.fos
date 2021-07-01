@@ -10,6 +10,7 @@ jobs:
       matrix:
         ansible:
         - stable-2.10
+        - stable-2.11
         - devel
     runs-on: ubuntu-latest
     steps:
@@ -34,7 +35,7 @@ jobs:
         run: ansible-test sanity --docker -v --color
         working-directory: ./ansible_collections/fujitsu/fos
 
-        
+
   units:
     runs-on: ubuntu-latest
     name: Units (${{ matrix.ansible }})
@@ -42,6 +43,7 @@ jobs:
       matrix:
         ansible:
           - stable-2.10
+          - stable-2.11
           - devel
 
     steps:
@@ -53,7 +55,7 @@ jobs:
       - name: Set up Python ${{ matrix.ansible }}
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: Install ansible-base (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
@@ -62,5 +64,5 @@ jobs:
         run: ansible-galaxy collection install ansible.netcommon -p .
 
       - name: Run unit tests for all Python versions
-        run: ansible-test units -v --color --docker
+        run: ansible-test units -v --color --docker --python 3.9
         working-directory: ./ansible_collections/fujitsu/fos
